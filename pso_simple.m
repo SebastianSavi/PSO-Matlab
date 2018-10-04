@@ -21,8 +21,20 @@
 % SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 function [general_best_position,general_best_score] = pso_simple(n_param,eval_func,lower_bound,upper_bound,n_particle,max_iter)
-%PSO pso
-%   Detailed explanation goes here
+%PSO_simple
+%   pso_simple does an optimization of parameters for a certain evaluation function:
+%
+% Parameters:
+% -n_param: 	number of parameters to optimize
+% -eval_func: 	evaluation function to optimize
+% -lower_bound: lower boundary of search space, should be a vector of length n_param
+% -upper_bound: upper boundary of search space, should be a vector of length n_param
+% -n_particle: 	number of particle for PSO algorithm
+% -max_iter: 	max number of iteration
+%
+% Outputs:
+% -general_best_position: 	best parameters set found by the optimization for the particular evaluation function
+% -general_best_score: 		best score obtained with the evaluation function
 
 %Verifications TODO:
 %-nargin
