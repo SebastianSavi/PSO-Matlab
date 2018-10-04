@@ -43,9 +43,9 @@ function [general_best_position,general_best_score] = pso_simple(n_param,eval_fu
 %-nParam >=1
 %-evalFunc return something corectly nReturned = 1
 %-initialize lB and uB and nParticle
-%-
-%-
-%Initialisation
+
+
+%Initialisation of parameters
 c1 = 2;
 c2 = 2;
 inertia_max = 0.98;
@@ -55,21 +55,29 @@ tolerance = 10^-10;
 flag_tolerance = 1;
 iteration = 1;
 
+%Initialisation of particles
 particle_position       = lower_bound + (upper_bound-lower_bound).*rand(n_particle,n_param);
 particle_velocity       = zeros(n_particle,n_param);
 particle_best_position  = particle_position;
 
 particle_score = zeros(1,n_particle);
 particle_best_score = zeros(1,n_particle);
+
 for i=1:n_particle
     particle_best_score(i) = eval_func(particle_position(i,:)');
 end
+
 [general_best_score,index] = min(particle_best_score);
 general_best_position = particle_position(index,:);
 
+
+% Main loop
 while iteration <max_iter && flag_tolerance
+
+% Update inertia
     inertia = inertia_max - (inertia_max - inertia_min)*iteration/max_iter;
     
+% Evaluate partcles
     for i=1:n_particle
         particle_score(i) = eval_func(particle_position(i,:));
         if particle_score(i) < particle_best_score(i)
@@ -78,8 +86,9 @@ while iteration <max_iter && flag_tolerance
         end
     end
     [g_best_score(iteration),index] = min(particle_best_score);
-    
     general_best_position = particle_best_position(index,:);
+
+% Update position and velocitiy of particles
     for i = 1:n_particle
         particle_velocity(i,:) = inertia*particle_velocity(i,:) + c1*rand*(particle_best_position(i,:) - particle_position(i,:)) + c2*rand*(general_best_position - particle_position(i,:));
         particle_position(i,:) = particle_position(i,:) + particle_velocity(i,:);
@@ -93,6 +102,7 @@ while iteration <max_iter && flag_tolerance
         end
     end
     
+% Look for stop criterion
     if iteration > 10
         if (g_best_score(iteration)-g_best_score(iteration - 10)) < tolerance
             flag_tolerance = 0;
